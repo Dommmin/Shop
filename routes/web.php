@@ -1,6 +1,10 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\AdminBrandController;
+use App\Http\Controllers\Api\Admin\AdminCategoryController;
 use App\Http\Controllers\Api\Admin\AdminIndexController;
+use App\Http\Controllers\Api\Admin\AdminProductController;
+use App\Http\Controllers\Api\Admin\AdminSubcategoryController;
 use App\Http\Controllers\Api\IndexController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -27,7 +31,11 @@ use Inertia\Inertia;
 //});
 
 Route::group(['prefix' => 'admin'], function () {
-    Route::resource('products', AdminIndexController::class);
+    Route::get('/', [AdminIndexController::class, 'index'])->name('admin.index');
+    Route::resource('/product', AdminProductController::class);
+    Route::resource('/subcategory', AdminSubcategoryController::class);
+    Route::resource('/category', AdminCategoryController::class);
+    Route::resource('/brand', AdminBrandController::class);
 });
 
 Route::get('/', [IndexController::class, 'index'])->name('index');
