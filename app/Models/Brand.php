@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Category extends Model
+class Brand extends Model
 {
     use HasFactory;
 
@@ -16,17 +16,9 @@ class Category extends Model
     /**
      * @return HasMany
      */
-    public function subcategories(): HasMany
+    public function products(): HasMany
     {
-        return $this->hasMany(Subcategory::class);
-    }
-
-    /**
-     * @return BelongsTo
-     */
-    public function person(): BelongsTo
-    {
-        return $this->belongsTo(Person::class);
+        return $this->hasMany(Product::class);
     }
 
     /**

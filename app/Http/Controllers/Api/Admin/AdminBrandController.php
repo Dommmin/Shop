@@ -1,14 +1,21 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\BrandStoreRequest;
+use App\Http\Resources\BrandResource;
+use App\Http\Resources\ProductResource;
+use App\Models\Brand;
+use App\Models\Category;
 use App\Models\Product;
+use App\Models\Subcategory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Response;
 use Inertia\ResponseFactory;
 
-class IndexController extends Controller
+class AdminBrandController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,41 +24,32 @@ class IndexController extends Controller
      */
     public function index()
     {
-        $products = Product::all();
+        $brands = BrandResource::collection(Brand::all());
 
-        return inertia('Index', compact('products'));
+        return inertia('Admin/Brand/Index', compact( 'brands'));
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response|ResponseFactory
      */
     public function create()
     {
-        //
+        return inertia('Admin/Brand/Create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param BrandStoreRequest $request
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(BrandStoreRequest $request)
     {
-        //
-    }
+        Brand::create($request->validated());
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+        return redirect()->route('brand.index');
     }
 
     /**
@@ -68,7 +66,7 @@ class IndexController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -80,11 +78,14 @@ class IndexController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Brand $brand
+     * @return RedirectResponse
      */
-    public function destroy($id)
+    public function destroy(Brand $brand)
     {
-        //
+        $brand->products()->delete();
+        $brand->delete();
+
+        return redirect()->route('brand.index');
     }
 }
